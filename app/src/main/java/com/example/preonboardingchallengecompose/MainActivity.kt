@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.preonboardingchallengecompose.ui.theme.PreOnboardingChallengeComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,12 +41,28 @@ class MainActivity : ComponentActivity() {
 //컴파일러에서도 소문자로 시작하면 경고(?)를 띄우는데, 이건 경고가 뜨지 않는다, Composable의 관습인가 보다.(마치 플러터를 하는것 같다. 선언형 UI)
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    //내부를 검색한 결과 Text()함수도 @Composable이 붙은 구성 가능한 함수이다.
-    //@Composable 함수이기 때문에 내부에서 Text함수를 호출할 수 있다.
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+
+    //배경을 바꾸기 위해 Surface를 사용하였다.
+    //@Composable annotation이 붙어 있다.
+    //@NonRestartableComposable이 같이 붙어있는데,
+    //검색 결과 다시 구성(Recomposition)을 방지하는 annotation이라는 것을 알았다.
+    //화면이 바뀔 때, 다시 구성하지 않음으로서 화면을 그릴 때 성능 향상을 기대할 수 있다.
+    Surface(color= MaterialTheme.colorScheme.primary){ // Material3에 정의되어 있는 색이다.
+        //내부를 보면 Text()함수도 @Composable이 붙은 구성 가능한 함수이다.
+        //@Composable 함수이기 때문에 내부에서 Text함수를 호출할 수 있다.
+        Text(
+            text = "Hello $name!",
+            //Modifier는 상위 레이아웃에서 받아서 자신에게 온다.
+            //주석처리를 해 버리면 Text의 내부에서 기본 Modifier를 사용한다.
+            //아마(?) view의 layoutParams처럼 layout 구성의 정보를 받는게 아닐까?
+            //맞는듯 하다. match_parent 처럼 fillMaxSize가 있다.
+            modifier = modifier.padding(24.dp)//dp는 Int의 extension으로 선언되어 있다.
+            //modifier의 함수들은 다시 자기 자신을 반환하는 형식이기 때문에 여러 함수를 계속 호출할 수 있다.
+            //밑은 예시이다.
+
+            //modifier = modifier.padding(24.dp).fillMaxSize()
+        )
+    }
 }
 
 //미리보기를 사용하고 싶다면 @Preview annotation을 사용하면 된다.
