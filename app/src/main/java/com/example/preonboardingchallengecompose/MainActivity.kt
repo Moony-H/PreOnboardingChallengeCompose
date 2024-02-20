@@ -27,8 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //밑에서 정의한 Greeting 함수이다. 함수 내부에서는 Text()를 호출한다.
-                    Greeting("Android")
+                    //밑에서 정의한 함수이다.
+                    MyAppChapter5(Modifier.fillMaxSize())
                 }
             }
         }
@@ -47,6 +47,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     //@NonRestartableComposable이 같이 붙어있는데,
     //검색 결과 다시 구성(Recomposition)을 방지하는 annotation이라는 것을 알았다.
     //화면이 바뀔 때, 다시 구성하지 않음으로서 화면을 그릴 때 성능 향상을 기대할 수 있다.
+    //Flutter의 StatelessWidget과 같은 느낌이다.
     Surface(color= MaterialTheme.colorScheme.primary){ // Material3에 정의되어 있는 색이다.
         //내부를 보면 Text()함수도 @Composable이 붙은 구성 가능한 함수이다.
         //@Composable 함수이기 때문에 내부에서 Text함수를 호출할 수 있다.
@@ -75,5 +76,36 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     PreOnboardingChallengeComposeTheme {
         Greeting("Moony")
+    }
+}
+
+
+//Composable을 구성할 때, Android에서는 기본 Modifier를 설정하는 것을 추천한다.
+//따라서 왠만하면 Modifier = Modifier를 Composable Function에 설정해 놓자.
+@Composable
+fun MyAppChapter5(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.background
+    ) {
+        GreetingChapter5("Android")
+    }
+}
+
+@Composable
+fun GreetingChapter5(name: String, modifier: Modifier = Modifier) {
+    Surface(color = MaterialTheme.colorScheme.primary) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier.padding(24.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreviewChapter5() {
+    PreOnboardingChallengeComposeTheme {
+        MyAppChapter5()
     }
 }
