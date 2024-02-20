@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+//xml에서 theme(light dark)를 설정했던 것 처럼 여기서도 색을 지정하는것 같다.
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -25,6 +26,8 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
+
+    //다른 색들을 오버라이드 가능하다.
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
