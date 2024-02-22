@@ -61,7 +61,7 @@ class Chapter7Activity:ComponentActivity() {
         //계속 할당되기 때문.
         //마치 onResume 안에 변수를 선언하여, 언제 stop 되고 다시 resume 될지도 모르는데, 데이터를 유지하기를 바라는 느낌?
         //그렇기 때문에 remember를 사용하여 state의 리컴포지션을 방지한다.
-        //근데 나같으면 viewModel에 stateflow 하나 두어서 관찰로 사용할 것 같다...
+        //근데 나같으면 viewModel에 stateflow 하나 두어서 관찰로 사용할 것 같다...(물론 recomposition을 시켜야 한다.)
         //(이러면 생명 주기에 영향을 받지 않고 값을 유지할 수 있다.)
         val expanded = remember { mutableStateOf(false) }
 
