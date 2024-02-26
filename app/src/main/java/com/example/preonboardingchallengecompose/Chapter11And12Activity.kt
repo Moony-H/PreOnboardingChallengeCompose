@@ -1,5 +1,6 @@
 package com.example.preonboardingchallengecompose
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -24,11 +25,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.preonboardingchallengecompose.ui.theme.PreOnboardingChallengeComposeTheme
 
-class Chapter11Activity : ComponentActivity() {
+class Chapter11And12Activity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -112,12 +114,18 @@ class Chapter11Activity : ComponentActivity() {
             modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
         ) {
             Row(modifier = Modifier.padding(24.dp)) {
-                Column(modifier = Modifier
-                    .weight(1f)
-                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = extraPadding.coerceAtLeast(0.dp))
                 ) {
                     Text(text = "Hello, ")
-                    Text(text = name)
+                    Text(
+                        text = name,
+                        //data class의 copy인줄 알았는데, 아니었다. 만약, 내 앱의 테마의 글꼴을 가져다 쓰는데, 이 부분만 특별히 조금 다르게 해야 한다면,
+                        //이렇게 copy를 써서 복사한 다음 fontWeight과 같이 세밀한 부분만 바꿔 조정하면 된다.
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
+                    )
                 }
                 ElevatedButton(
                     onClick = { expanded = !expanded }
@@ -129,6 +137,12 @@ class Chapter11Activity : ComponentActivity() {
         }
     }
 
+    @Preview(
+        showBackground = true,
+        widthDp = 320,
+        uiMode = UI_MODE_NIGHT_YES,
+        name = "GreetingPreviewDark"
+    )
     @Preview(showBackground = true, widthDp = 320)
     @Composable
     fun GreetingPreview() {
@@ -144,4 +158,5 @@ class Chapter11Activity : ComponentActivity() {
             MyApp(Modifier.fillMaxSize())
         }
     }
+
 }
