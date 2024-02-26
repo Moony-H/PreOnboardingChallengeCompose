@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,9 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.preonboardingchallengecompose.ui.theme.PreOnboardingChallengeComposeTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.saveable.rememberSaveable
 
 
-class Chapter9Activity : ComponentActivity() {
+class Chapter9And10Activity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,8 +42,11 @@ class Chapter9Activity : ComponentActivity() {
     @Composable
     fun MyApp(modifier: Modifier = Modifier) {
 
-        //Hoisting. 자세한 설명은 Onboarding Screen에 주석을 달아놨다.
-        var shouldShowOnboarding by remember {
+        //remember를 rememberSaveable로 바꿨다.
+        //이렇게 하면 화면의 회전이 일어나도 상태를 유지한다.
+        //마치 화면이 회전할 때 뷰가 다시 그려질때와 같다.
+        //이때는 viewModel에 값을 유지시키는게 일반적이었지만, compose에서는 이렇게 하는것 같다.
+        var shouldShowOnboarding by rememberSaveable {
             mutableStateOf(true)
         }
 
@@ -116,7 +119,10 @@ class Chapter9Activity : ComponentActivity() {
     @Composable
     fun Greeting(name: String, modifier: Modifier = Modifier) {
 
-        var expanded by remember { mutableStateOf(false) }
+        //위의 상황과 마찬가지로 이 목록이 화면 밖을 벗어나면, 다시 그리게 되는데,
+        //이 때에 expanded가 다시 초기화된다.
+        //rememberSaveable로 바꾸면 해결된다.
+        var expanded by rememberSaveable { mutableStateOf(false) }
 
         val extraPadding = if (expanded) 48.dp else 0.dp
 
