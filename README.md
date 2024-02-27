@@ -208,11 +208,11 @@ fun GreetingPreview() {
 
 ### 새롭게 안 것
 
-@Composable이 붙은 함수끼리만 내부에서 Composable을 호출할 수 있다.
+1. @Composable이 붙은 함수끼리만 내부에서 Composable을 호출할 수 있다.
 
-@Preview를 사용하면 split 혹은 
+2. @Preview를 사용하면 split 혹은 design으로 미리 구성한 UI를 볼 수 있다.
 
-특이한 annotation을 발견했는데, Surface에 붙어있는 @NonRestartableComposable 이다.
+3. 특이한 annotation을 발견했는데, Surface에 붙어있는 @NonRestartableComposable 이다.
 
 ![Surface](https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/c2619870-be75-41ab-b4cc-4855bfa60b55)
 
