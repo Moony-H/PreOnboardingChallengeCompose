@@ -107,7 +107,11 @@ Activity 다음이 바로 ComponentActivity였다.
 ![AppCompatActivityClass](https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/706c97e9-9b56-4918-aa61-0ff4e7fd2134)
 
 
-정리하면 Activity -> ComponentActivity -> FragmentActivity -> AppCompatActivity 순으로 자식 class였다.
+상속 관계를 나열한다면
+
+**Activity -> ComponentActivity -> FragmentActivity -> AppCompatActivity**
+
+위의 순으로 상속을 받는다.
 
 내가 들은 바로, Jetpack Compose를 사용하면 Fragment를 사용하지 않아도 된다고 들었는데, 그 이유로 Activity를 가볍게 하기 위해 ComponentActivity를 사용하지 않았나 싶다.
 
@@ -222,6 +226,164 @@ fun GreetingPreview() {
 검색 결과 다시 구성(Recomposition)을 방지하는 annotation이라는 것을 알았다.
 
 화면이 바뀔 때, 다시 구성하지 않음으로서 화면을 그릴 때 성능 향상을 기대할 수 있다.
+
+<br/>
+
+<br/>
+
+## Chapter 6 Row Column
+
+Chapter 6에서는 Row와 Column에 대해 배웠다.
+
+Row와 Column, 말 그대로 행과 열이다.
+
+Composable을 나열할 수 있는 Composable 함수이다.
+
+Row와 Column의 다른 점은 가로로 나열과 세로로 나열이다.
+
+마치 LinearLayout의 orientation을 설정하여 자식 View들을 나열하는 것과 같다.
+
+<img width="734" alt="rowcolumn" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/5ca5b59c-4d87-4e62-b9a3-294401511a68">
+
+
+
+
+LinearLayout과 마찬가지로, 자식 Composable에게 weight를 설정할 수 있다.
+
+1,1을 설정했을 때는 1:1 비율로 설정되며, 2,1을 설정했을 때는 2:1 비율로 설정된다.
+
+
+1 대 1일때
+
+<img width="587" alt="1by1code" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/7f0318f5-a508-474e-b256-bccf445eb6bb">
+
+<img width="253" alt="1by1preview" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/fbc67f94-0530-4950-bd16-885e36c06b8b">
+
+2 대 1일때
+
+<img width="588" alt="2by1code" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/e61b8b70-efcd-4d46-b8a5-925901b7b971">
+
+<img width="247" alt="2by1preview" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/67a07bc8-9e90-455e-b600-b69f52be6db9">
+
+
+<br/>
+
+<br/>
+
+또한 ListView == Row or Column이 되었다.
+
+ListView 또한 아이템 view를 xml로 작성한 후에, ListAdapter로 inflate를 해서 설정해야 했다.
+
+매우 번거로운 일이었는데, 이를 Row, Column으로 대체하면서 굉장히 편해 졌다.
+
+<img width="664" alt="columnIsListView" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/1879f324-5557-4b32-8ddc-ee60dec7f94f">
+
+(이 부분에서 감동했다...)
+
+또한 위와 같이 Composable도 함수다. 즉, 반복문을 통해서 여러번 호출할 수도 있게 되었다.
+
+이전까지는 "Compose UI가 강력한 도구인가?"에 대해 의구심이 들었지만 for문과 함께 동적으로 UI를 작성할 수 있다는걸 눈으로 보니 재사용성이 강력한 도구임을 느꼈다.
+
+하지만 아직까지도 의구심이 드는데, 뷰를 재사용하는 RecyclerView와 달리 이번 Column은 ListView의 단점과 마찬가지로 한번에 모든 목록을 그린다는 단점이 있었다.
+
+이는 다음 chapter에서 LazyColumn을 사용하면서 더욱 강력하고 효과적이게 사용하게 된다.
+
+## Chapter 7 state
+
+이번 챕터에서는 상태에 대해서 배웠다.
+
+뷰에서는 상태를 가져야 할 때가 있다.
+
+토글 버튼의 경우 체크된 상태와 체크가 해제된 상태가 있듯이 뷰 안에 상태를 가지게 된다.
+
+이런 경우 Compose UI에서는 MutableState라는 객체를 제공한다.
+
+```kotlin
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+
+        //state와 mutableState는 값을 가지고 있고, 그 값이 변경될 때 마다 recomposition(UI 재구성)을 하는 인터페이스이다.
+        //하지만 val expanded = mutableStateOf() 만 하게 된다면, recomposition간에 상태를 유지할 수 없다.
+        //계속 할당되기 때문.
+        //마치 onResume 안에 변수를 선언하여, 언제 stop 되고 다시 resume 될지도 모르는데, 데이터를 유지하기를 바라는 느낌?
+        //그렇기 때문에 remember를 사용하여 state의 리컴포지션을 방지한다.
+        //(이러면 생명 주기에 영향을 받지 않고 값을 유지할 수 있다.)
+        val expanded = remember { mutableStateOf(false) }
+
+        val extraPadding = if (expanded.value) 48.dp else 0.dp
+        Surface(
+            color = MaterialTheme.colorScheme.primary,
+            modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+        ) {
+            Row(modifier = Modifier.padding(24.dp)) {
+
+                Column(modifier = Modifier.weight(1f)
+                    .padding(bottom = extraPadding)) {
+                    Text(text = "Hello ")
+                    Text(text = name)
+                }
+                ElevatedButton(
+                    onClick = { expanded.value = !expanded.value },
+                ) {
+                    Text(if (expanded.value) "Show less" else "Show more")
+                }
+            }
+        }
+    }
+```
+
+주석의 설명대로 compose 안에서 expanded = mutableStateOf(false)를 사용한다면
+
+Gretting함수가 호출될 때 마다 계속 새로 할당하개 될 것이다.
+
+그래서 값을 유지할 수 있게 람다로 객체를 할당하는 remember 함수를 사용한다.
+
+<img width="723" alt="rememberFunc" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/8f47c3f0-c038-4c23-92e8-db7d584b8b93">
+
+이제 remember 함수가 적당한 때에 calculation 람다를 실행하여 MutableState를 초기화 해 줄 것이다.
+
+<br/>
+
+<img width="554" alt="mutableState" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/2eca19f7-39cb-4598-b327-d5c6ad219daa">
+
+이제 mutableState를 바꾸어 보자. 그럼 mutableState를 참조하는 composable 함수들이 재호출되어 뷰를 다시 그리게 된다.
+
+<br/>
+
+<br/>
+
+preview의 새로운 기능을 설명해줬다.
+
+바로 사용자 입력을 받을수 있다...!
+
+<img width="499" alt="inter" src="https://github.com/Moony-H/PreOnboardingChallengeCompose/assets/53536205/e133adfb-93d4-4c99-bdd0-8b8f75894c3c">
+
+
+위와 같이 interactive mode를 켜면 앱을 실행하지 않고도 사용자 입력을 테스트 할 수 있다.
+
+(이제 뷰를 작성할 때는 Compose UI를 애용해야 겠다고 생각했다.)
+
+<br/>
+
+<br/>
+
+
+### 알아볼 것들
+
+정말 신기하게도 mutableState를 참조하는 이들만 recomposition이 이뤄진다.
+
+mutableState를 참조하는 애들이 상태가 변경되면 다시 호출되는데,
+
+나는 처음에 mutableState를 초기화한 위치의 함수 전체를 다시 호출하는 줄 알았다.
+
+그러나 정말 mutableState를 사용하는 곳만 다시 호출했다.
+
+이 방식을 좀더 조사해봐야갰다.
+
+
+
+
+
 
 
 
